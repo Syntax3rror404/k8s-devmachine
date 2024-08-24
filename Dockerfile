@@ -59,7 +59,7 @@ RUN addgroup --gid 1001 devgroup && \
 # SSH configuration for rootless container
 RUN mkdir -p /etc/ssh/keys /var/run/sshd && \
     ssh-keygen -A && \
-    ssh-keygen -t rsa -f /etc/ssh/keys/ssh_host_rsa_key -N '' && \
+    cp /etc/ssh/ssh_host_* /etc/ssh/keys/ && \
     chown -R root:root /etc/ssh/keys && \
     chmod 600 /etc/ssh/keys/* && \
     echo 'dev:dev' | chpasswd && \
@@ -72,17 +72,17 @@ RUN chown -R dev:devgroup /usr/local /home/dev
 # Switch to non-root user
 USER dev
 
-# Set environment variables, including PATH to specific directories
-ENV PATH="/usr/local/bin:$PATH"
-ENV VIRTUAL_ENV="/usr/local/venv"
-
 # Copy entrypoint script
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
+
+# Set environment variables, including PATH to specific directories
+ENV PATH="/usr/local/bin:$PATH"
+ENV VIRTUAL_ENV="/usr/local/venv"
 
 # Expose SSH port
 EXPOSE 2222
 
 # Start the SSH server and any other services via entrypoint.sh
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 CMD []
