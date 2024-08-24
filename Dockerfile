@@ -1,12 +1,4 @@
-# Version arguments
-ARG DEBIAN_VERSION=bullseye-slim
-ARG TERRAFORM_VERSION=1.9.5
-ARG PACKER_VERSION=1.11.2
-ARG TFHELPER_VERSION=release
-ARG PYTHON_VERSION=3.9
-
-# Base image
-FROM debian:${DEBIAN_VERSION}
+FROM debian:bullseye-slim
 
 LABEL maintainer="Syntax3rror404"
 
@@ -30,16 +22,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Terraform CLI
+ARG TERRAFORM_VERSION=1.9.5
 RUN curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o terraform.zip && \
     unzip terraform.zip -d /usr/local/bin/ && \
     rm terraform.zip
 
 # Install Packer
+ARG PACKER_VERSION=1.11.2
 RUN curl -L "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip" -o packer.zip && \
     unzip packer.zip -d /usr/local/bin/ && \
     rm packer.zip
 
 # Install TFE_helper in /usr/local/tf-helper/bin
+ARG TFHELPER_VERSION=release
 RUN mkdir -p /usr/local/tf-helper/bin && \
     git clone -b ${TFHELPER_VERSION} https://github.com/hashicorp-community/tf-helper.git /usr/local/tf-helper && \
     ln -s /usr/local/tf-helper/tfh/bin/tfh /usr/local/tf-helper/bin/tfh
