@@ -1,3 +1,4 @@
+# Base image
 FROM debian:bullseye-slim
 
 LABEL maintainer="Syntax3rror404"
@@ -46,10 +47,9 @@ RUN python3 -m venv /usr/local/venv && \
     /usr/local/venv/bin/pip install -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt
 
-# Install MinIO Client in /usr/local/minio/bin
-RUN mkdir -p /usr/local/minio/bin && \
-    curl -L -o /usr/local/minio/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc && \
-    chmod +x /usr/local/minio/bin/mc
+# Install MinIO Client
+RUN curl -L -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc && \
+    chmod +x /usr/local/bin/mc
 
 # Create non-root user with specific UID/GID
 RUN addgroup --gid 1001 devgroup && \
@@ -73,7 +73,7 @@ RUN chown -R dev:devgroup /usr/local /home/dev
 USER dev
 
 # Set environment variables, including PATH to specific directories
-ENV PATH="/usr/local/terraform/bin:/usr/local/packer/bin:/usr/local/tf-helper/bin:/usr/local/minio/bin:/usr/local/venv/bin:$PATH"
+ENV PATH="/usr/local/bin:$PATH"
 ENV VIRTUAL_ENV="/usr/local/venv"
 
 # Copy entrypoint script
