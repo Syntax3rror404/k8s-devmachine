@@ -56,15 +56,6 @@ RUN addgroup --gid 1001 devgroup && \
     adduser --uid 1001 --ingroup devgroup --shell /bin/bash --home /home/dev --disabled-password dev && \
     echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# Ensure SSH configuration and host keys are set up
-RUN ssh-keygen -A && \
-    sed -i 's/^#HostKey/HostKey/' /etc/ssh/sshd_config && \
-    chown -R root:root /etc/ssh && \
-    chmod 600 /etc/ssh/ssh_host_* && \
-    echo 'dev:dev' | chpasswd && \
-    sed -i 's|#PermitRootLogin prohibit-password|PermitRootLogin no|' /etc/ssh/sshd_config && \
-    sed -i 's|#PasswordAuthentication yes|PasswordAuthentication no|' /etc/ssh/sshd_config
-
 # Adjust permissions for /usr/local and home directories
 RUN chown -R dev:devgroup /usr/local /home/dev
 
