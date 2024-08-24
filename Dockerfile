@@ -36,6 +36,7 @@ RUN curl -L "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PA
 # Install TFE_helper in /usr/local/tf-helper/bin
 ARG TFHELPER_VERSION=release
 RUN mkdir -p /usr/local/tf-helper/bin && \
+    if [ -d "/usr/local/tf-helper" ]; then rm -rf /usr/local/tf-helper; fi && \
     git clone -b ${TFHELPER_VERSION} https://github.com/hashicorp-community/tf-helper.git /usr/local/tf-helper && \
     ln -s /usr/local/tf-helper/tfh/bin/tfh /usr/local/tf-helper/bin/tfh
 
