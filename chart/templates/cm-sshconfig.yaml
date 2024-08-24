@@ -8,6 +8,7 @@ data:
     PermitRootLogin no
     PasswordAuthentication yes
     ChallengeResponseAuthentication no
+    UsePrivilegeSeparation no
     UsePAM yes
     X11Forwarding yes
     PrintMotd no
