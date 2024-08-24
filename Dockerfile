@@ -10,11 +10,6 @@ FROM debian:${DEBIAN_VERSION}
 
 LABEL maintainer="Syntax3rror404"
 
-# Set environment variables for versions
-ENV TERRAFORM_VERSION=${TERRAFORM_VERSION}
-ENV PACKER_VERSION=${PACKER_VERSION}
-ENV TFHELPER_VERSION=${TFHELPER_VERSION}
-
 # Install basic dependencies and tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
@@ -36,7 +31,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Terraform in /usr/local/terraform/bin
 RUN mkdir -p /usr/local/terraform/bin && \
-    curl -L -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
+    curl -L -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/1.9.5/terraform_1.9.5_linux_amd64.zip" && \
     unzip /tmp/terraform.zip -d /usr/local/terraform/bin || (cat /tmp/terraform.zip; echo "Failed to download or unzip Terraform"; exit 1) && \
     rm /tmp/terraform.zip
 
