@@ -77,12 +77,12 @@ ENV PATH="/usr/local/bin:$PATH"
 ENV VIRTUAL_ENV="/usr/local/venv"
 
 # Copy entrypoint script
-COPY ./entrypoint.sh /home/dev/entrypoint.sh
-RUN chmod 755 /home/dev/entrypoint.sh
+COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod 755 /usr/local/bin/entrypoint.sh
 
 # Expose SSH port
 EXPOSE 2222
 
 # Start the SSH server and any other services via entrypoint.sh
-ENTRYPOINT ["/home/dev/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 CMD []
