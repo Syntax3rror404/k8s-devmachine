@@ -19,6 +19,15 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: {{ .Values.service.port }}
+        securityContext:
+          runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
+          runAsUser: {{ .Values.securityContext.runAsUser }}
+          allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
+          capabilities:
+            drop:
+              {{- toYaml .Values.securityContext.capabilities.drop | nindent 14 }}
+          seccompProfile:
+            type: {{ .Values.securityContext.seccompProfile.type }}
         volumeMounts:
         - name: home-volume
           mountPath: /home/dev
