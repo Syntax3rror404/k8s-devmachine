@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,6 +12,8 @@ spec:
       labels:
         app: {{ .Release.Name }}
     spec:
+      securityContext:
+        fsGroup: 1001
       containers:
       - name: {{ .Release.Name }}
         image: "{{ .Values.image.source }}"
@@ -20,7 +21,6 @@ spec:
         ports:
         - containerPort: {{ .Values.service.port }}
         securityContext:
-          fsGroup: 1001
           runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
           runAsUser: {{ .Values.securityContext.runAsUser }}
           allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
@@ -32,9 +32,17 @@ spec:
         volumeMounts:
         - name: home-volume
           mountPath: /home/dev
+        - name: entrypoint-script
+          mountPath: /usr/local/bin/entrypoint.sh
+          subPath: entrypoint.sh
+          readOnly: true
         resources:
 {{ toYaml .Values.resources | indent 10 }}
       volumes:
+      - name: entrypoint-script
+        configMap:
+          name: dev-environment-entrypoint
+          defaultMode: 0755
       - name: home-volume
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-pvc

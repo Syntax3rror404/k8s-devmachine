@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dev-environment-entrypoint
+data:
+  entrypoint.sh: |
+    #!/bin/bash
+
+    echo "Ensuring SSH keys directory exists at /home/dev/ssh_keys."
+    mkdir -p /home/dev/ssh_keys
+
+    # Generate keys if they do not exist
+    if [ ! -f /home/dev/ssh_keys/ssh_host_rsa_key ]; then
+        echo "Generating new SSH host RSA key."
+        ssh-keygen -t rsa -f /home/dev/ssh_keys/ssh_host_rsa_key -N ''
+    fi
+    if [ ! -f /home/dev/ssh_keys/ssh_host_ecdsa_key ]; then
+        echo "Generating new SSH host ECDSA key."
+        ssh-keygen -t ecdsa -f /home/dev/ssh_keys/ssh_host_ecdsa_key -N ''
+    fi
+    if [ ! -f /home/dev/ssh_keys/ssh_host_ed25519_key ]; then
+        echo "Generating new SSH host ED25519 key."
+        ssh-keygen -t ed25519 -f /home/dev/ssh_keys/ssh_host_ed25519_key -N ''
+    fi
+
+    # Correct permissions for SSH keys
+    chmod 600 /home/dev/ssh_keys/ssh_host_*
+
+    # Ensure the run directory for the PID file exists and has the right permissions
+    echo "Ensuring run directory exists at /home/dev/run."
+    mkdir -p /home/dev/run
+    chown dev:dev /home/dev/run
+
+
+    echo "Starting SSH service with host keys from /home/dev/ssh_keys on port 2222."
+    /usr/sbin/sshd -D -e -f /etc/ssh/sshd_config \
+        -o Port={{ .Values.service.targetPort }} \
+        -o HostKey=/home/dev/ssh_keys/ssh_host_rsa_key \
+        -o HostKey=/home/dev/ssh_keys/ssh_host_ecdsa_key \
+        -o HostKey=/home/dev/ssh_keys/ssh_host_ed25519_key \
+        -o PidFile=/home/dev/run/sshd.pid
+
+    if [ $? -ne 0 ]; then
+        echo "Failed to start SSH service."
+    else
+        echo "SSH service started successfully."
+    fi
+
+    # Keep the container running if no command is provided
+    echo "No additional command provided, container will keep running."
+    tail -f /dev/null
