@@ -57,14 +57,14 @@ RUN addgroup --gid 1001 devgroup && \
     echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # SSH configuration for rootless container
-RUN mkdir -p /home/dev/.ssh /home/dev/var/run/sshd && \
+RUN mkdir -p /etc/ssh/keys /var/run/sshd && \
     ssh-keygen -A && \
+    ssh-keygen -t rsa -f /etc/ssh/keys/ssh_host_rsa_key -N '' && \
+    chown -R root:root /etc/ssh/keys && \
+    chmod 600 /etc/ssh/keys/* && \
     echo 'dev:dev' | chpasswd && \
-    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config && \
-    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config && \
-    mkdir -p /home/dev/ssh_host_keys && \
-    ssh-keygen -t rsa -f /home/dev/ssh_host_keys/ssh_host_rsa_key -N '' && \
-    chown -R dev:devgroup /home/dev/.ssh /home/dev/var/run/sshd /home/dev/ssh_host_keys
+    sed -i 's|#PermitRootLogin prohibit-password|PermitRootLogin no|' /etc/ssh/sshd_config && \
+    sed -i 's|#PasswordAuthentication yes|PasswordAuthentication no|' /etc/ssh/sshd_config
 
 # Adjust permissions for /usr/local and home directories
 RUN chown -R dev:devgroup /usr/local /home/dev

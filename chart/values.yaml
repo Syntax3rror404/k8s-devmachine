@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/syntax3rror404/k8s-devmachine
-  tag: b180370a1d42efea8b3c6e630e4eab1cc9207ddd95b8a1f29929ae235e9f3e7c
+  tag: master
   pullPolicy: IfNotPresent
 
 service:
