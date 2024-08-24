@@ -56,12 +56,11 @@ RUN addgroup --gid 1001 devgroup && \
     adduser --uid 1001 --ingroup devgroup --shell /bin/bash --home /home/dev --disabled-password dev && \
     echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-# SSH configuration for rootless container
-RUN mkdir -p /etc/ssh/keys /var/run/sshd && \
+# Ensure SSH configuration and host keys are set up
+RUN mkdir -p /var/run/sshd && \
     ssh-keygen -A && \
-    cp /etc/ssh/ssh_host_* /etc/ssh/keys/ && \
-    chown -R root:root /etc/ssh/keys && \
-    chmod 600 /etc/ssh/keys/* && \
+    chown -R root:root /etc/ssh && \
+    chmod 600 /etc/ssh/ssh_host_* && \
     echo 'dev:dev' | chpasswd && \
     sed -i 's|#PermitRootLogin prohibit-password|PermitRootLogin no|' /etc/ssh/sshd_config && \
     sed -i 's|#PasswordAuthentication yes|PasswordAuthentication no|' /etc/ssh/sshd_config

@@ -2,7 +2,7 @@
 
 # Ensure SSH host keys are available; generate them if they do not exist
 if [ ! -f /etc/ssh/ssh_host_rsa_key ]; then
-    echo "SSH host keys not found, generating new keys."
+    echo "Generating new SSH host keys."
     ssh-keygen -A
 fi
 

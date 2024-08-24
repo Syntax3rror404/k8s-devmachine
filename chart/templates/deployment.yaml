@@ -20,6 +20,7 @@ spec:
         ports:
         - containerPort: {{ .Values.service.port }}
         securityContext:
+          fsGroup: 1001
           runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
           runAsUser: {{ .Values.securityContext.runAsUser }}
           allowPrivilegeEscalation: {{ .Values.securityContext.allowPrivilegeEscalation }}
