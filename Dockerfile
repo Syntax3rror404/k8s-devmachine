@@ -10,6 +10,11 @@ FROM debian:${DEBIAN_VERSION}
 
 LABEL maintainer="Syntax3rror404"
 
+# Set environment variables for versions
+ENV TERRAFORM_VERSION=${TERRAFORM_VERSION}
+ENV PACKER_VERSION=${PACKER_VERSION}
+ENV TFHELPER_VERSION=${TFHELPER_VERSION}
+
 # Install basic dependencies and tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
