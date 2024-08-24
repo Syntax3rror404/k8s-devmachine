@@ -1,0 +1,17 @@
+replicaCount: 1
+
+image:
+  repository: docker pull ghcr.io/syntax3rror404/k8s-devmachine
+  tag: b180370a1d42efea8b3c6e630e4eab1cc9207ddd95b8a1f29929ae235e9f3e7c
+  pullPolicy: IfNotPresent
+
+service:
+  type: LoadBalancer
+  port: 22
+
+persistence:
+  enabled: true
+  size: 10Gi
+  storageClass: "longhorn"
+
+resources: {}

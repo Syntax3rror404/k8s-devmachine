@@ -1,0 +1,5 @@
+apiVersion: v2
+name: dev-machine
+description: A Helm chart for deploying the dev environment container
+version: 0.1.0
+appVersion: "1.0"
