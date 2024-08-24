@@ -15,9 +15,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     curl \
     git \
-    python${PYTHON_VERSION} \
-    python${PYTHON_VERSION}-venv \
-    python${PYTHON_VERSION}-pip \
+    python3 \
+    python3-venv \
+    python3-pip \
     libffi-dev \
     gcc \
     make \
@@ -29,27 +29,32 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Terraform
-RUN curl -L -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-    unzip /tmp/terraform.zip -d /usr/local/bin/ && rm /tmp/terraform.zip
+# Install Terraform in /usr/local/terraform/bin
+RUN mkdir -p /usr/local/terraform/bin && \
+    curl -L -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    unzip /tmp/terraform.zip -d /usr/local/terraform/bin && rm /tmp/terraform.zip
 
-# Install Packer
-RUN curl -L -o /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
-    unzip /tmp/packer.zip -d /usr/local/bin/ && rm /tmp/packer.zip
+# Install Packer in /usr/local/packer/bin
+RUN mkdir -p /usr/local/packer/bin && \
+    curl -L -o /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+    unzip /tmp/packer.zip -d /usr/local/packer/bin && rm /tmp/packer.zip
 
-# Install TFE_helper
-RUN git clone -b ${TFHELPER_VERSION} https://github.com/hashicorp-community/tf-helper.git /opt/tf-helper
+# Install TFE_helper in /usr/local/tf-helper/bin
+RUN mkdir -p /usr/local/tf-helper/bin && \
+    git clone -b ${TFHELPER_VERSION} https://github.com/hashicorp-community/tf-helper.git /usr/local/tf-helper && \
+    ln -s /usr/local/tf-helper/tfh/bin/tfh /usr/local/tf-helper/bin/tfh
 
-# Set up Python environment and install requirements
+# Set up Python environment in /usr/local/venv
 COPY ./requirements.txt /tmp/requirements.txt
-RUN python${PYTHON_VERSION} -m venv /opt/venv && \
-    /opt/venv/bin/pip install --upgrade pip && \
-    /opt/venv/bin/pip install -r /tmp/requirements.txt && \
+RUN python3 -m venv /usr/local/venv && \
+    /usr/local/venv/bin/pip install --upgrade pip && \
+    /usr/local/venv/bin/pip install -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt
 
-# Install MinIO Client
-RUN curl -L -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc && \
-    chmod +x /usr/local/bin/mc
+# Install MinIO Client in /usr/local/minio/bin
+RUN mkdir -p /usr/local/minio/bin && \
+    curl -L -o /usr/local/minio/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc && \
+    chmod +x /usr/local/minio/bin/mc
 
 # Create non-root user with specific UID/GID
 RUN addgroup --gid 1001 devgroup && \
@@ -69,15 +74,15 @@ RUN mkdir -p /home/dev/.ssh /home/dev/var/run/sshd && \
     ssh-keygen -t ed25519 -f /home/dev/ssh_host_keys/ssh_host_ed25519_key -N '' && \
     chown -R dev:devgroup /home/dev/.ssh /home/dev/var/run/sshd /home/dev/ssh_host_keys
 
-# Adjust permissions for /opt and home directories
-RUN chown -R dev:devgroup /opt /home/dev
+# Adjust permissions for /usr/local and home directories
+RUN chown -R dev:devgroup /usr/local /home/dev
 
 # Switch to non-root user
 USER dev
 
-# Set environment variables
-ENV PATH="/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/tf-helper/tfh/bin:/opt/venv/bin:$PATH"
-ENV VIRTUAL_ENV="/opt/venv"
+# Set environment variables, including PATH to specific directories
+ENV PATH="/usr/local/terraform/bin:/usr/local/packer/bin:/usr/local/tf-helper/bin:/usr/local/minio/bin:/usr/local/venv/bin:$PATH"
+ENV VIRTUAL_ENV="/usr/local/venv"
 
 # Copy entrypoint script
 COPY ./entrypoint.sh /home/dev/entrypoint.sh
