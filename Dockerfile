@@ -59,6 +59,8 @@ RUN addgroup --gid 1001 dev && \
 # Adjust permissions for /usr/local and home directories
 RUN chown -R dev:dev /usr/local /home/dev
 
+RUN echo "+:dev:ALL" >> /etc/security/access.conf
+
 # Switch to non-root user
 USER dev
 

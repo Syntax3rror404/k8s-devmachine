@@ -30,7 +30,7 @@ data:
 
 
     echo "Starting SSH service with host keys from /home/dev/ssh_keys on port 2222."
-    /usr/sbin/sshd -D -e -f /etc/ssh/sshd_config \
+    /usr/sbin/sshd -D -ddd -e -f /etc/ssh/sshd_config \
         -o Port={{ .Values.service.targetPort }} \
         -o HostKey=/home/dev/ssh_keys/ssh_host_rsa_key \
         -o HostKey=/home/dev/ssh_keys/ssh_host_ecdsa_key \
