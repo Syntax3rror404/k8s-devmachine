@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-sshd-config
+data:
+  sshd_config: |
+    Port {{ .Values.service.targetPort }}
+    PermitRootLogin no
+    PasswordAuthentication yes
+    ChallengeResponseAuthentication no
+    UsePAM yes
+    X11Forwarding yes
+    PrintMotd no
+    AcceptEnv LANG LC_*
+    Subsystem sftp /usr/lib/openssh/sftp-server
+    UseDNS no
+    PidFile /home/dev/run/sshd.pid

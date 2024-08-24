@@ -16,6 +16,11 @@ persistence:
 
 resources: {}
 
+ssh:
+  authorizedKeys: |
+    # Place auth keys here ...
+    # ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu...
+
 securityContext:
   runAsNonRoot: true
   runAsUser: 1001

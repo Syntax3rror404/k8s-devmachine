@@ -52,12 +52,12 @@ RUN curl -L -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64
     chmod +x /usr/local/bin/mc
 
 # Create non-root user with specific UID/GID
-RUN addgroup --gid 1001 devgroup && \
-    adduser --uid 1001 --ingroup devgroup --shell /bin/bash --home /home/dev --disabled-password dev && \
+RUN addgroup --gid 1001 dev && \
+    adduser --uid 1001 --ingroup dev --shell /bin/bash --home /home/dev --disabled-password dev && \
     echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Adjust permissions for /usr/local and home directories
-RUN chown -R dev:devgroup /usr/local /home/dev
+RUN chown -R dev:dev /usr/local /home/dev
 
 # Switch to non-root user
 USER dev
@@ -67,8 +67,8 @@ COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
 # Set environment variables, including PATH to specific directories
-ENV PATH="/usr/local/bin:$PATH"
 ENV VIRTUAL_ENV="/usr/local/venv"
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Expose SSH port
 EXPOSE 2222

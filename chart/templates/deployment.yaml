@@ -14,6 +14,7 @@ spec:
     spec:
       securityContext:
         fsGroup: 1001
+        runAsUser: 1001
       containers:
       - name: {{ .Release.Name }}
         image: "{{ .Values.image.source }}"
@@ -36,13 +37,29 @@ spec:
           mountPath: /usr/local/bin/entrypoint.sh
           subPath: entrypoint.sh
           readOnly: true
+        - name: ssh-keys
+          mountPath: /home/dev/.ssh/authorized_keys
+          subPath: authorized_keys
+          readOnly: true
+        - name: sshd-config-volume
+          mountPath: /etc/ssh/sshd_config
+          subPath: sshd_config
+          readOnly: true
         resources:
 {{ toYaml .Values.resources | indent 10 }}
       volumes:
       - name: entrypoint-script
         configMap:
-          name: dev-environment-entrypoint
+          name: {{ .Release.Name }}-entrypoint
           defaultMode: 0755
       - name: home-volume
         persistentVolumeClaim:
           claimName: {{ .Release.Name }}-pvc
+      - name: ssh-keys
+        configMap:
+          name: {{ .Release.Name }}-ssh-keys
+          defaultMode: 0755
+      - name: sshd-config-volume
+        configMap:
+          name: {{ .Release.Name }}-sshd-config
+          defaultMode: 0755
