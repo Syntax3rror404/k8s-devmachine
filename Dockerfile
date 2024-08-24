@@ -52,14 +52,12 @@ RUN curl -L -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64
     chmod +x /usr/local/bin/mc
 
 # Create non-root user with specific UID/GID
-RUN addgroup --gid 1001 dev && \
-    adduser --uid 1001 --ingroup dev --shell /bin/bash --home /home/dev --disabled-password dev && \
+RUN groupadd -g 1001 dev && \
+    useradd -m -d /home/dev -s /bin/bash -g dev -u 1001 dev && \
     echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Adjust permissions for /usr/local and home directories
 RUN chown -R dev:dev /usr/local /home/dev
-
-RUN echo "+:dev:ALL" >> /etc/security/access.conf && touch /etc/nologin
 
 # Switch to non-root user
 USER dev

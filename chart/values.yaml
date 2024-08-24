@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  source: ghcr.io/syntax3rror404/k8s-devmachine@sha256:d0917c569a0ac6267cb7bc18a0d950dc97afaaf495f799637394a682be81e95e 
+  source: ghcr.io/syntax3rror404/k8s-devmachine@sha256:9e166d8c10c7f2c27c17027f4363a5862eb4241c8ebb5661b30845b0fc6d2bfd 
   pullPolicy: IfNotPresent
 
 service:
