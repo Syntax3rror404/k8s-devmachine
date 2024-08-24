@@ -33,12 +33,11 @@ RUN curl -L "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PA
     unzip -o packer.zip -d /usr/local/bin/ && \
     rm packer.zip
 
-# Install TFE_helper in /usr/local/tf-helper/bin
+# Install TF-Helper
 ARG TFHELPER_VERSION=release
-RUN mkdir -p /usr/local/tf-helper/bin && \
-    if [ -d "/usr/local/tf-helper" ]; then rm -rf /usr/local/tf-helper; fi && \
-    git clone -b ${TFHELPER_VERSION} https://github.com/hashicorp-community/tf-helper.git /usr/local/tf-helper && \
-    ln -s /usr/local/tf-helper/tfh/bin/tfh /usr/local/tf-helper/bin/tfh
+RUN git clone -b ${TFHELPER_VERSION} https://github.com/hashicorp-community/tf-helper.git /usr/local/tf-helper && \
+    cp /usr/local/tf-helper/tfh/bin/tfh /usr/local/bin/ && \
+    rm -rf /usr/local/tf-helper
 
 # Set up Python environment in /usr/local/venv
 COPY ./requirements.txt /tmp/requirements.txt
@@ -61,13 +60,10 @@ RUN addgroup --gid 1001 devgroup && \
 RUN mkdir -p /home/dev/.ssh /home/dev/var/run/sshd && \
     ssh-keygen -A && \
     echo 'dev:dev' | chpasswd && \
-    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin no/' /etc/ssh/sshd_config && \
+    sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config && \
     mkdir -p /home/dev/ssh_host_keys && \
     ssh-keygen -t rsa -f /home/dev/ssh_host_keys/ssh_host_rsa_key -N '' && \
-    ssh-keygen -t dsa -f /home/dev/ssh_host_keys/ssh_host_dsa_key -N '' && \
-    ssh-keygen -t ecdsa -f /home/dev/ssh_host_keys/ssh_host_ecdsa_key -N '' && \
-    ssh-keygen -t ed25519 -f /home/dev/ssh_host_keys/ssh_host_ed25519_key -N '' && \
     chown -R dev:devgroup /home/dev/.ssh /home/dev/var/run/sshd /home/dev/ssh_host_keys
 
 # Adjust permissions for /usr/local and home directories
