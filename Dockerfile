@@ -1,6 +1,6 @@
 # Version arguments
 ARG DEBIAN_VERSION=bullseye-slim
-ARG TERRAFORM_VERSION=1.9.4
+ARG TERRAFORM_VERSION=1.9.5
 ARG PACKER_VERSION=1.11.2
 ARG TFHELPER_VERSION=release
 ARG PYTHON_VERSION=3.9
@@ -36,13 +36,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install Terraform in /usr/local/terraform/bin
 RUN mkdir -p /usr/local/terraform/bin && \
-    curl -L -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-    unzip /tmp/terraform.zip -d /usr/local/terraform/bin || (echo "Failed to download or unzip Terraform"; exit 1) && \
+    curl -L -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" && \
+    unzip /tmp/terraform.zip -d /usr/local/terraform/bin || (cat /tmp/terraform.zip; echo "Failed to download or unzip Terraform"; exit 1) && \
     rm /tmp/terraform.zip
 
 # Install Packer in /usr/local/packer/bin
 RUN mkdir -p /usr/local/packer/bin && \
-    curl -L -o /tmp/packer.zip https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+    curl -L -o /tmp/packer.zip "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip" && \
     unzip /tmp/packer.zip -d /usr/local/packer/bin && rm /tmp/packer.zip
 
 # Install TFE_helper in /usr/local/tf-helper/bin
