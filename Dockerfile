@@ -24,13 +24,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Terraform CLI
 ARG TERRAFORM_VERSION=1.9.5
 RUN curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o terraform.zip && \
-    unzip terraform.zip -d /usr/local/bin/ && \
+    unzip -o terraform.zip -d /usr/local/bin/ && \
     rm terraform.zip
 
 # Install Packer
 ARG PACKER_VERSION=1.11.2
 RUN curl -L "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip" -o packer.zip && \
-    unzip packer.zip -d /usr/local/bin/ && \
+    unzip -o packer.zip -d /usr/local/bin/ && \
     rm packer.zip
 
 # Install TFE_helper in /usr/local/tf-helper/bin
