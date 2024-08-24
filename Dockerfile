@@ -29,16 +29,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install Terraform in /usr/local/terraform/bin
-RUN mkdir -p /usr/local/terraform/bin && \
-    curl -L -o /tmp/terraform.zip "https://releases.hashicorp.com/terraform/1.9.5/terraform_1.9.5_linux_amd64.zip" && \
-    unzip /tmp/terraform.zip -d /usr/local/terraform/bin || (cat /tmp/terraform.zip; echo "Failed to download or unzip Terraform"; exit 1) && \
-    rm /tmp/terraform.zip
+# Install Terraform CLI
+RUN curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o terraform.zip && \
+    unzip terraform.zip -d /usr/local/bin/ && \
+    rm terraform.zip
 
-# Install Packer in /usr/local/packer/bin
-RUN mkdir -p /usr/local/packer/bin && \
-    curl -L -o /tmp/packer.zip "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip" && \
-    unzip /tmp/packer.zip -d /usr/local/packer/bin && rm /tmp/packer.zip
+# Install Packer
+RUN curl -L "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip" -o packer.zip && \
+    unzip packer.zip -d /usr/local/bin/ && \
+    rm packer.zip
 
 # Install TFE_helper in /usr/local/tf-helper/bin
 RUN mkdir -p /usr/local/tf-helper/bin && \
