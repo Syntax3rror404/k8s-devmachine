@@ -1,0 +1,19 @@
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Kaniko build
+        uses: aevea/action-kaniko@master
+        with:
+          #image: ${{ github.repository }}
+          registry: ghcr.io
+          tag: ${{ github.head_ref || github.ref_name }}
+          username: ${{ github.actor }}
+          password: ${{secrets.CI_REGISTRY_PASSWORD}}

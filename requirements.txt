@@ -1,0 +1,13 @@
+#pip3
+ansible
+pyvmomi
+pyyaml
+netaddr
+paramiko
+testinfra
+pytest-xdist
+passlib
+jmespath
+ansible-tower-cli
+packaging
+hvac
