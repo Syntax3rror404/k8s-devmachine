@@ -32,7 +32,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Terraform in /usr/local/terraform/bin
 RUN mkdir -p /usr/local/terraform/bin && \
     curl -L -o /tmp/terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
-    unzip /tmp/terraform.zip -d /usr/local/terraform/bin && rm /tmp/terraform.zip
+    unzip /tmp/terraform.zip -d /usr/local/terraform/bin || (echo "Failed to download or unzip Terraform"; exit 1) && \
+    rm /tmp/terraform.zip
 
 # Install Packer in /usr/local/packer/bin
 RUN mkdir -p /usr/local/packer/bin && \
