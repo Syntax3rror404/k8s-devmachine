@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \
     gcc \
     make \
+    vim \
+    iputils-ping \
+    dnsutils \
     openssh-server \
     sshpass \
     jq \
