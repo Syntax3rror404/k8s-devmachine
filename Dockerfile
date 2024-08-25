@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     vim \
     iputils-ping \
     dnsutils \
+    dmidecode \
+    lshw \
     openssh-server \
     sshpass \
     jq \
