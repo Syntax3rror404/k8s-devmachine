@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  source: ghcr.io/syntax3rror404/k8s-devmachine@sha256:9e166d8c10c7f2c27c17027f4363a5862eb4241c8ebb5661b30845b0fc6d2bfd 
+  source: ghcr.io/syntax3rror404/k8s-devmachine@sha256:0814c31aaeccf36a95c2a4c80635a56aaf64a392a0cb32d6efac342684da2e2d 
   pullPolicy: IfNotPresent
 
 service:
@@ -20,6 +20,7 @@ ssh:
   authorizedKeys: |
     # Place auth keys here ...
     # ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu...
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBMGGOs2OYGxj74/TS3AXmbGNoVLQ07gCG5LXamlrd6HoZLPRkqwy2X1YS+9mWvINwH7FzvPnzd+5P5fxeLiYiwTIEXamlqQ53rnTvvgtS9Wl7fI/4MdlI2pNsAS3jm1KOzn/w5ABTkvGUo9QtzgR2659ykpo/LicsShEqVKh0ItOv+D298JsD5Ykj9Y3S5GE4D84DGisBpvBxdkMWm3ZD4SYML4b/P2ihFL3IEdmPfewS7O37bpAe4TuhjltOmTBjy4QaQgQacMDXkz5WCrCYh3N2/2gmsPLR5lirH9YJLzyGR08uhsyFMe79Rxl+Fs+9UDvx5hcVjXMUOnO34G3fTu54OTcekN+h7l+6rLWuSuiRH0O+RIV3PvlT+ibOiRPwfWSWDQtMTTynRrYMKEtnFr/Eg0EtdQRzFhrwxwX9+zaAgAcmL/3qIDSzEwOWm6pVH1RNKjC9K8pDu9mKmD6zKFfkqsMh9aV6N+mSTcDnLfMRD9xYWSbJnH2Xj3c3uskJ2XsGDdHoxIQvx2KfStaGshN83mzbvn9Qx3SwdI2X/lpABIrrSg97kNKWPywB8s5J3a86Y+Knvd8fSz3lM/2Yk1lZ9oYN68wD0mqNmPbxIMQVaKh1pd4xTucVM+1E+IEKFk8Un6xNRk0luYanbGjvYpN5gxnEfq4NT1+VhKrcHw== marcel zapf@DESKTOP-CR0CINF
 
 securityContext:
   runAsNonRoot: true
