@@ -8,7 +8,7 @@ data:
     PermitRootLogin no
     PasswordAuthentication yes
     ChallengeResponseAuthentication no
-    UsePAM yes
+    UsePAM no
     X11Forwarding yes
     PrintMotd no
     AcceptEnv LANG LC_*
