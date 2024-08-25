@@ -51,12 +51,12 @@ RUN python3 -m venv /usr/local/venv && \
 RUN curl -L -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc && \
     chmod +x /usr/local/bin/mc
 
-# Create non-root user with specific UID/GID
+# Create dev user
 RUN groupadd -g 1001 dev && \
     useradd -m -d /home/dev -s /bin/bash -g dev -u 1001 dev && \
-    echo 'dev:*:17900:0:99999:7:::' >> /etc/shadow && \
+    echo "dev:temporary" | chpasswd && \
+    passwd -d dev && \
     echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
 
 # Adjust permissions for /usr/local and home directories
 RUN chown -R dev:dev /usr/local /home/dev
