@@ -19,7 +19,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     net-tools \
     vim \
     iputils-ping \
+    wget \
     dnsutils \
+    tmux \
     dmidecode \
     dnsutils \
     lshw \
