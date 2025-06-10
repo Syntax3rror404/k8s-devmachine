@@ -14,10 +14,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \
     gcc \
     make \
+    htop \
+    iproute2 \
+    netstate \
     vim \
     iputils-ping \
     dnsutils \
     dmidecode \
+    dnsutils \
     lshw \
     openssh-server \
     sshpass \
