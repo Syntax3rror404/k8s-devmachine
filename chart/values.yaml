@@ -20,6 +20,7 @@ ssh:
   authorizedKeys: |
     # Place auth keys here ...
     # ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu...
+    ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBjYNgOeBJ+f0koBLJg7JzT2U9agAGqd/c1gZbVvCZrK
 securityContext:
   runAsNonRoot: true
   runAsUser: 1001
