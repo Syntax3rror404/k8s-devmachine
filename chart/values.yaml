@@ -1,13 +1,16 @@
 replicaCount: 1
 
 image:
-  source: ghcr.io/syntax3rror404/k8s-devmachine@sha256:b74d9fc455717bee5b6330ef892bc621c0cfccf3c2b95af5ea407624ed4cce95 
+  source: ghcr.io/syntax3rror404/k8s-devmachine@sha256:62d616cfddddd6b81272c12f751215c56c15ffefa355acb11cf8f1e4c48d63dc 
   pullPolicy: IfNotPresent
 
 service:
   type: LoadBalancer
   port: 2222
   targetPort: 2222
+  labels:
+    ciliuml2: pool
+
 
 persistence:
   enabled: true

@@ -16,3 +16,6 @@ data:
 
     # Prompt
     PS1='\u@\h:\w\$ '
+
+    # activate venv
+    source ~/venv/bin/activate
