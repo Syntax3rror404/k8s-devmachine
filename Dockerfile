@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libffi-dev \
     gcc \
     make \
+    rsync \
     htop \
     iproute2 \
     net-tools \
