@@ -53,6 +53,14 @@ spec:
           mountPath: /etc/pam.d/sshd
           subPath: sshd
           readOnly: true
+        - name: bashrc
+          mountPath: /home/dev/.bashrc
+          subPath: .bashrc
+          readOnly: true
+        - name: bash-profile
+          mountPath: /home/dev/.bash_profile
+          subPath: .bash_profile
+          readOnly: true
         resources: {{ toYaml .Values.resources | indent 10 }}
       volumes:
       - name: entrypoint-script
@@ -71,6 +79,14 @@ spec:
         configMap:
           name: {{ .Release.Name }}-pam-config
           defaultMode: 0755
+      - name: bashrc
+        configMap:
+          name: {{ .Release.Name }}-bashrc
+          defaultMode: 0644
+      - name: bash-profile
+        configMap:
+          name: {{ .Release.Name }}-bash-profile
+          defaultMode: 0644
   volumeClaimTemplates:
   - metadata:
       name: home-volume

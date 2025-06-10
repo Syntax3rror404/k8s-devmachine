@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-bashrc
+data:
+  .bashrc: |
+    # ~/.bashrc for dev user
+
+    export PATH="$HOME/.local/bin:/usr/local/venv/bin:$PATH"
+    export PYTHONUSERBASE="$HOME/.local"
+
+    # Colors
+    export LS_OPTIONS='--color=auto'
+    eval "$(dircolors)"
+    alias ls='ls $LS_OPTIONS'
+    alias ll='ls $LS_OPTIONS -l'
+    alias la='ls $LS_OPTIONS -la'
+
+    # Prompt
+    PS1='\u@\h:\w\$ '

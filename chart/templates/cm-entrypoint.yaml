@@ -5,45 +5,74 @@ metadata:
 data:
   entrypoint.sh: |
     #!/bin/bash
+    set -euo pipefail
 
-    echo "Ensuring SSH keys directory exists at /home/dev/ssh_keys."
-    mkdir -p /home/dev/ssh_keys
+    SSH_KEYS_DIR=/home/dev/ssh_keys
+    RUN_DIR=/home/dev/run
+    PID_FILE=$RUN_DIR/sshd.pid
+    PORT=2222
 
-    # Generate keys if they do not exist
-    if [ ! -f /home/dev/ssh_keys/ssh_host_rsa_key ]; then
-        echo "Generating new SSH host RSA key."
-        ssh-keygen -t rsa -f /home/dev/ssh_keys/ssh_host_rsa_key -N ''
-    fi
-    if [ ! -f /home/dev/ssh_keys/ssh_host_ecdsa_key ]; then
-        echo "Generating new SSH host ECDSA key."
-        ssh-keygen -t ecdsa -f /home/dev/ssh_keys/ssh_host_ecdsa_key -N ''
-    fi
-    if [ ! -f /home/dev/ssh_keys/ssh_host_ed25519_key ]; then
-        echo "Generating new SSH host ED25519 key."
-        ssh-keygen -t ed25519 -f /home/dev/ssh_keys/ssh_host_ed25519_key -N ''
-    fi
+    echo "Ensuring SSH keys directory exists at $SSH_KEYS_DIR."
+    mkdir -p "$SSH_KEYS_DIR"
 
-    chmod 600 /home/dev/ssh_keys/ssh_host_*
-
-    echo "Ensuring run directory exists at /home/dev/run."
-    mkdir -p /home/dev/run
-
-    echo "Currently running sshd processes:"
-    ps aux | grep sshd
-
-    echo "Killing any existing sshd processes..."
-    for pid in $(ps aux | grep sshd | grep -v grep | awk '{print $2}'); do
-    echo "Killing sshd pid $pid"
-    kill $pid
+    # Generate keys if missing
+    for keytype in rsa ecdsa ed25519; do
+      keyfile="$SSH_KEYS_DIR/ssh_host_${keytype}_key"
+      if [ ! -f "$keyfile" ]; then
+        echo "Generating new SSH host $keytype key."
+        ssh-keygen -t "$keytype" -f "$keyfile" -N '' >/dev/null
+      fi
     done
 
-    echo "Removing stale PID file if exists..."
-    rm -f /home/dev/run/sshd.pid
+    chmod 600 "$SSH_KEYS_DIR"/ssh_host_*
 
-    echo "Starting SSH service..."
+    echo "Ensuring run directory exists at $RUN_DIR."
+    mkdir -p "$RUN_DIR"
+
+    echo "Currently running sshd processes:"
+    pgrep sshd || echo "No sshd processes found."
+
+    echo "Killing any existing sshd processes..."
+    pids=$(pgrep sshd || true)
+    if [ -n "$pids" ]; then
+      echo "Found sshd PIDs: $pids"
+      kill $pids
+      # Wait max 5s for sshd to stop
+      timeout=5
+      while pgrep sshd >/dev/null && [ $timeout -gt 0 ]; do
+        sleep 1
+        timeout=$((timeout-1))
+      done
+      if pgrep sshd >/dev/null; then
+        echo "sshd still running, sending SIGKILL"
+        pkill -9 sshd
+      fi
+    else
+      echo "No sshd processes to kill."
+    fi
+
+    echo "Removing stale PID file if exists..."
+    rm -f "$PID_FILE"
+
+    # Check if port is free (requires netstat or ss)
+    if command -v ss >/dev/null; then
+      if ss -tuln | grep -q ":$PORT "; then
+        echo "ERROR: Port $PORT is still in use, aborting start."
+        exit 1
+      fi
+    elif command -v netstat >/dev/null; then
+      if netstat -tuln | grep -q ":$PORT "; then
+        echo "ERROR: Port $PORT is still in use, aborting start."
+        exit 1
+      fi
+    else
+      echo "WARNING: Could not check port usage (no ss/netstat found)."
+    fi
+
+    echo "Starting SSH service on port $PORT..."
     exec /usr/sbin/sshd -D -f /etc/ssh/sshd_config \
-    -o Port=2222 \
-    -o HostKey=/home/dev/ssh_keys/ssh_host_ed25519_key \
-    -o HostKey=/home/dev/ssh_keys/ssh_host_rsa_key \
-    -o HostKey=/home/dev/ssh_keys/ssh_host_ecdsa_key \
-    -o PidFile=/home/dev/run/sshd.pid
+      -o Port=$PORT \
+      -o HostKey=$SSH_KEYS_DIR/ssh_host_ed25519_key \
+      -o HostKey=$SSH_KEYS_DIR/ssh_host_rsa_key \
+      -o HostKey=$SSH_KEYS_DIR/ssh_host_ecdsa_key \
+      -o PidFile=$PID_FILE

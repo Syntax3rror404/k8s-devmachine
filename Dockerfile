@@ -28,13 +28,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Terraform CLI
-ARG TERRAFORM_VERSION=1.9.5
+ARG TERRAFORM_VERSION=1.12.1
 RUN curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o terraform.zip && \
     unzip -o terraform.zip -d /usr/local/bin/ && \
     rm terraform.zip
 
 # Install Packer
-ARG PACKER_VERSION=1.11.2
+ARG PACKER_VERSION=1.13.1
 RUN curl -L "https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip" -o packer.zip && \
     unzip -o packer.zip -d /usr/local/bin/ && \
     rm packer.zip
@@ -45,12 +45,11 @@ RUN git clone -b ${TFHELPER_VERSION} https://github.com/hashicorp-community/tf-h
     cp /usr/local/tf-helper/tfh/bin/tfh /usr/local/bin/ && \
     rm -rf /usr/local/tf-helper
 
-# Set up Python environment in /usr/local/venv
-COPY ./requirements.txt /tmp/requirements.txt
-RUN python3 -m venv /usr/local/venv && \
-    /usr/local/venv/bin/pip install --upgrade pip && \
-    /usr/local/venv/bin/pip install -r /tmp/requirements.txt && \
+# Set up Python environment
+RUN pip3 install --upgrade pip && \
+    pip3 install -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt
+
 
 # Install MinIO Client
 RUN curl -L -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc && \
@@ -75,10 +74,6 @@ USER dev
 # Copy entrypoint script
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
-
-# Set environment variables, including PATH to specific directories
-ENV VIRTUAL_ENV="/usr/local/venv"
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # Expose SSH port
 EXPOSE 2222
