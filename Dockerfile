@@ -46,6 +46,7 @@ RUN git clone -b ${TFHELPER_VERSION} https://github.com/hashicorp-community/tf-h
     rm -rf /usr/local/tf-helper
 
 # Set up Python environment
+COPY ./requirements.txt /tmp/requirements.txt
 RUN pip3 install --break-system-packages --upgrade pip && \
     pip3 install --break-system-packages -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt
