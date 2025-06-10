@@ -24,13 +24,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     dnsutils \
     mc \
     tmux \
+    tree \
     dmidecode \
     dnsutils \
     lshw \
     openssh-server \
     sshpass \
+    less \
     jq \
+    yq \
     xorriso \
+    tcpdump \
     openssl \
     ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
