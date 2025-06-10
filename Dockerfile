@@ -63,6 +63,9 @@ RUN groupadd -g 1001 dev && \
     passwd -d dev && \
     echo "dev ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
+# Fix pam 
+RUN sed -i ‘s/session required pam_loginuid.so/session optional pam_loginuid.so/’ /etc/pam.d/sshd
+
 # Adjust permissions for /usr/local and home directories
 RUN chown -R dev:dev /usr/local /home/dev
 
