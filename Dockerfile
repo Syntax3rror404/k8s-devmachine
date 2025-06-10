@@ -34,7 +34,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     jq \
     yq \
     xorriso \
-    tcpdump \
     openssl \
     ca-certificates \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
