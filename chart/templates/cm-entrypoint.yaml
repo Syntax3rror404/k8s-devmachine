@@ -13,7 +13,12 @@ data:
     PORT=2222
 
     echo "Ensuring SSH keys directory exists at $SSH_KEYS_DIR."
-    mkdir -p "$SSH_KEYS_DIR"
+    if [ ! -d "$SSH_KEYS_DIR" ]; then
+      echo "Creating SSH keys directory at $SSH_KEYS_DIR"
+      mkdir -p "$SSH_KEYS_DIR"
+    else
+      echo "SSH keys directory already exists at $SSH_KEYS_DIR, skipping creation"
+    fi
 
     # Generate keys if missing
     for keytype in rsa ecdsa ed25519; do
@@ -21,6 +26,8 @@ data:
       if [ ! -f "$keyfile" ]; then
         echo "Generating new SSH host $keytype key."
         ssh-keygen -t "$keytype" -f "$keyfile" -N '' >/dev/null
+      else
+        echo "SSH host $keytype key already exists, skipping generation"
       fi
     done
 
@@ -69,19 +76,23 @@ data:
       echo "WARNING: Could not check port usage (no ss/netstat found)."
     fi
 
-    # create user python virtual environment
+    # Create user python virtual environment
     VENV_DIR="/home/dev/venv"
     if [ ! -d "$VENV_DIR" ]; then
       echo "Creating virtual environment in $VENV_DIR"
       python3 -m venv "$VENV_DIR"
+    else
+      echo "Virtual environment already exists at $VENV_DIR, skipping creation"
     fi
     source "$VENV_DIR/bin/activate"
 
-    # create user bin directory
+    # Create user bin directory
     BIN_DIR="/home/dev/bin"
     if [ ! -d "$BIN_DIR" ]; then
       echo "Creating user bin directory at $BIN_DIR"
       mkdir -p "$BIN_DIR"
+    else
+      echo "User bin directory already exists at $BIN_DIR, skipping creation"
     fi
 
     echo "Starting SSH service on port $PORT..."
