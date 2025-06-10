@@ -5,6 +5,7 @@ metadata:
 data:
   .bashrc: |
     # ~/.bashrc for dev user
+    export PATH="/home/dev/bin:$PATH"
     export PYTHONUSERBASE="$HOME/.local"
 
     # Colors
@@ -19,3 +20,4 @@ data:
 
     # activate venv
     source ~/venv/bin/activate
+
