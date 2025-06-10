@@ -60,8 +60,8 @@ RUN pip3 install --break-system-packages --upgrade pip && \
 
 
 # Install MinIO Client
-RUN curl -L -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc && \
-    chmod +x /usr/local/bin/mc
+RUN curl -L -o /usr/local/bin/mcli https://dl.min.io/client/mc/release/linux-amd64/mc && \
+    chmod +x /usr/local/bin/mcli
 
 # Create dev user
 RUN groupadd -g 1001 dev && \
