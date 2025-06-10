@@ -47,9 +47,8 @@ RUN git clone -b ${TFHELPER_VERSION} https://github.com/hashicorp-community/tf-h
 
 # Set up Python environment
 RUN pip3 install --upgrade pip && \
-    pip3 install -r /tmp/requirements.txt && \
+    pip3 install --break-system-packages -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt
-
 
 # Install MinIO Client
 RUN curl -L -o /usr/local/bin/mc https://dl.min.io/client/mc/release/linux-amd64/mc && \
