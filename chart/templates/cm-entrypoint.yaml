@@ -96,6 +96,19 @@ data:
       echo "User bin directory already exists at $BIN_DIR, skipping creation"
     fi
 
+
+    # Create local dev bashrc file if it doesn't exist
+    DEV_BASHRC="/home/dev/.dev_bashrc"
+    if [ ! -f "$DEV_BASHRC" ]; then
+      echo "Creating local dev bashrc file at $DEV_BASHRC"
+      cat > "$DEV_BASHRC" << 'EOF'
+    echo "Local dev bashrc loaded - customize /home/dev/.dev_bashrc as needed"
+    EOF
+      chmod 644 "$DEV_BASHRC"
+    else
+      echo "Local dev bashrc file already exists at $DEV_BASHRC, skipping creation"
+    fi
+
     echo "Starting SSH service on port $PORT..."
     exec /usr/sbin/sshd -D -f /etc/ssh/sshd_config \
       -o Port=$PORT \

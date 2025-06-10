@@ -21,3 +21,7 @@ data:
     # activate venv
     source ~/venv/bin/activate
 
+    # Include local dev bashrc if it exists
+    if [ -f ~/.dev_bashrc ]; then
+      source ~/.dev_bashrc
+    fi
