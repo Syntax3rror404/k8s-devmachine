@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     iputils-ping \
     wget \
     dnsutils \
+    mc \
     tmux \
     dmidecode \
     dnsutils \
