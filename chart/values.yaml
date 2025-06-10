@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  source: ghcr.io/syntax3rror404/k8s-devmachine@sha256:510352ea9a57812d776f095fbc51244349a0d89913e3a5af08ed365fd344bc4b 
+  source: ghcr.io/syntax3rror404/k8s-devmachine@sha256:46b8f94a7fbabde3d205d97517c97bf84e80ef43e6e42c2df27ca276c7269542 
   pullPolicy: IfNotPresent
 
 service:
@@ -23,6 +23,7 @@ ssh:
   authorizedKeys: |
     # Place auth keys here ...
     # ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCu...
+
 
 securityContext:
   runAsNonRoot: true
