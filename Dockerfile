@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     make \
     htop \
     iproute2 \
-    netstate \
+    net-tools \
     vim \
     iputils-ping \
     dnsutils \
