@@ -49,6 +49,10 @@ spec:
           mountPath: /etc/ssh/sshd_config
           subPath: sshd_config
           readOnly: true
+        - name: pam-config-volume
+          mountPath: /etc/pam.d/sshd
+          subPath: sshd
+          readOnly: true
         resources: {{ toYaml .Values.resources | indent 10 }}
       volumes:
       - name: entrypoint-script
@@ -62,6 +66,10 @@ spec:
       - name: sshd-config-volume
         configMap:
           name: {{ .Release.Name }}-sshd-config
+          defaultMode: 0755
+      - name: pam-config-volume
+        configMap:
+          name: {{ .Release.Name }}-pam-config
           defaultMode: 0755
   volumeClaimTemplates:
   - metadata:

@@ -23,26 +23,27 @@ data:
         ssh-keygen -t ed25519 -f /home/dev/ssh_keys/ssh_host_ed25519_key -N ''
     fi
 
-    # Correct permissions for SSH keys
     chmod 600 /home/dev/ssh_keys/ssh_host_*
+
     echo "Ensuring run directory exists at /home/dev/run."
     mkdir -p /home/dev/run
 
+    echo "Currently running sshd processes:"
+    ps aux | grep sshd
 
-    echo "Starting SSH service with host keys from /home/dev/ssh_keys on port 2222."
-    /usr/sbin/sshd -D -d -e -f /etc/ssh/sshd_config \
-        -o Port={{ .Values.service.targetPort }} \
-        -o HostKey=/home/dev/ssh_keys/ssh_host_rsa_key \
-        -o HostKey=/home/dev/ssh_keys/ssh_host_ecdsa_key \
-        -o HostKey=/home/dev/ssh_keys/ssh_host_ed25519_key \
-        -o PidFile=/home/dev/run/sshd.pid
+    echo "Killing any existing sshd processes..."
+    for pid in $(ps aux | grep sshd | grep -v grep | awk '{print $2}'); do
+    echo "Killing sshd pid $pid"
+    kill $pid
+    done
 
-    if [ $? -ne 0 ]; then
-        echo "Failed to start SSH service."
-    else
-        echo "SSH service started successfully."
-    fi
+    echo "Removing stale PID file if exists..."
+    rm -f /home/dev/run/sshd.pid
 
-    # Keep the container running if no command is provided
-    echo "No additional command provided, container will keep running."
-    tail -f /dev/null
+    echo "Starting SSH service..."
+    exec /usr/sbin/sshd -D -f /etc/ssh/sshd_config \
+    -o Port=2222 \
+    -o HostKey=/home/dev/ssh_keys/ssh_host_ed25519_key \
+    -o HostKey=/home/dev/ssh_keys/ssh_host_rsa_key \
+    -o HostKey=/home/dev/ssh_keys/ssh_host_ecdsa_key \
+    -o PidFile=/home/dev/run/sshd.pid
