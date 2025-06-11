@@ -1,8 +1,6 @@
 # Base image
 FROM docker.io/debian:trixie-slim
 
-LABEL maintainer="Syntax3rror404"
-
 # Install basic dependencies and tools
 RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
