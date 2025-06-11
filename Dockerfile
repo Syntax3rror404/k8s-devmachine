@@ -1,5 +1,5 @@
 # Base image
-FROM docker.io/debian:bookworm-slim
+FROM docker.io/debian:trixie-slim
 
 LABEL maintainer="Syntax3rror404"
 
