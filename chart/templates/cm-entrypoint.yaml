@@ -87,7 +87,7 @@ data:
     source "$VENV_DIR/bin/activate"
 
     # Create user bin directory
-    BIN_DIR="/home/dev/bin"
+    BIN_DIR="/home/dev/.local/bin"
     if [ ! -d "$BIN_DIR" ]; then
       echo "Creating user bin directory at $BIN_DIR"
       mkdir -p "$BIN_DIR"
@@ -95,7 +95,6 @@ data:
     else
       echo "User bin directory already exists at $BIN_DIR, skipping creation"
     fi
-
 
     # Create local dev bashrc file if it doesn't exist
     DEV_BASHRC="/home/dev/.dev_bashrc"

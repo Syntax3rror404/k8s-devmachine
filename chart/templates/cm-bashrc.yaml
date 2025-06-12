@@ -5,7 +5,7 @@ metadata:
 data:
   .bashrc: |
     # ~/.bashrc for dev user
-    export PATH="/home/dev/bin:/home/dev/bin/go/bin:$PATH"
+    export PATH="/home/dev/.local/bin:/home/dev/.local/bin/go/bin:$PATH"
     export PYTHONUSERBASE="$HOME/.local"
 
     # Colors

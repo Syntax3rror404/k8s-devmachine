@@ -105,7 +105,7 @@ kubectl describe pvc home-volume-devmachine-0
 /home/dev/
 ├── .ssh/authorized_keys    # SSH keys
 ├── venv/                   # Python venv (auto-activated)
-├── bin/                    # Your binaries or optional bin/go installation
+├── .local/bin/             # Your binaries or optional bin/go installation
 └── projects/               # Your code
 ```
 
