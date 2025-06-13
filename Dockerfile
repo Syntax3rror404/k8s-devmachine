@@ -37,7 +37,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Terraform CLI
-ARG TERRAFORM_VERSION=1.12.1
+ARG TERRAFORM_VERSION=1.12.2
 RUN curl -L "https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip" -o terraform.zip && \
     unzip -o terraform.zip -d /usr/local/bin/ && \
     rm terraform.zip
